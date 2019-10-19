@@ -49,6 +49,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UnitTests-CommonLib", "src\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FancyZonesEditor", "src\modules\fancyzones\editor\FancyZonesEditor\FancyZonesEditor.csproj", "{5CCC8468-DEC8-4D36-99D4-5C891BEBD481}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "altdrag", "altdrag", "{4E6F84EF-9EC5-49AB-970D-AD86AD834B86}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "altdrag", "src\modules\altdrag\dll\altdrag.vcxproj", "{3BC54FDA-950E-4A4A-BEB9-28496E350EFF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -97,6 +101,10 @@ Global
 		{5CCC8468-DEC8-4D36-99D4-5C891BEBD481}.Debug|x64.Build.0 = Debug|x64
 		{5CCC8468-DEC8-4D36-99D4-5C891BEBD481}.Release|x64.ActiveCfg = Release|x64
 		{5CCC8468-DEC8-4D36-99D4-5C891BEBD481}.Release|x64.Build.0 = Release|x64
+		{3BC54FDA-950E-4A4A-BEB9-28496E350EFF}.Debug|x64.ActiveCfg = Debug|x64
+		{3BC54FDA-950E-4A4A-BEB9-28496E350EFF}.Debug|x64.Build.0 = Debug|x64
+		{3BC54FDA-950E-4A4A-BEB9-28496E350EFF}.Release|x64.ActiveCfg = Release|x64
+		{3BC54FDA-950E-4A4A-BEB9-28496E350EFF}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -113,6 +121,8 @@ Global
 		{4E577735-DFAB-41AF-8A6E-B6E8872A2928} = {1FAF749F-0D6F-4BF5-A563-31A4B5279D27}
 		{1A066C63-64B3-45F8-92FE-664E1CCE8077} = {1AFB6476-670D-4E80-A464-657E01DFF482}
 		{5CCC8468-DEC8-4D36-99D4-5C891BEBD481} = {D1D6BC88-09AE-4FB4-AD24-5DED46A791DD}
+		{4E6F84EF-9EC5-49AB-970D-AD86AD834B86} = {4574FDD0-F61D-4376-98BF-E5A1262C11EC}
+		{3BC54FDA-950E-4A4A-BEB9-28496E350EFF} = {4E6F84EF-9EC5-49AB-970D-AD86AD834B86}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C3A2F9D1-7930-4EF4-A6FC-7EE0A99821D0}
