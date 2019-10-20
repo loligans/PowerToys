@@ -22,28 +22,17 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpReser
   return TRUE;
 }
 
-// The PowerToy name that will be shown in the settings.
-const static wchar_t* MODULE_NAME = L"altdrag";
-// Add a description that will we shown in the module settings page.
-const static wchar_t* MODULE_DESC = L"<no description>";
+struct AltDragSettings {
+    std::wstring left_mouse_action = L"Nothing";
+    std::wstring middle_mouse_action = L"Move window";
+    std::wstring right_mouse_action = L"Resize window";
+    std::wstring scroll_wheel_action = L"Nothing";
 
-// These are the properties shown in the Settings page.
-struct ModuleSettings {
-  // Add the PowerToy module properties with default values.
-  // Currently available types:
-  // - int
-  // - bool
-  // - string
-
-  //bool bool_prop = true;
-  //int int_prop = 10;
-  //std::wstring string_prop = L"The quick brown fox jumps over the lazy dog";
-  //std::wstring color_prop = L"#1212FF";
-
+    std::wstring hotkey = L"Alt";
 } g_settings;
 
 // Implement the PowerToy Module Interface and all the required methods.
-class altdrag : public PowertoyModuleIface {
+class AltDragModule : public PowertoyModuleIface {
 private:
   // The PowerToy state.
   bool m_enabled = false;
@@ -53,24 +42,24 @@ private:
 
 public:
   // Constructor
-  altdrag() {
+  AltDragModule() {
     init_settings();
   };
 
-  // Destroy the powertoy and free memory
-  virtual void destroy() override {
+  virtual void destroy() override 
+  {
     delete this;
   }
 
-  // Return the display name of the powertoy, this will be cached by the runner
-  virtual const wchar_t* get_name() override {
-    return MODULE_NAME;
+  virtual PCWSTR get_name() override 
+  {
+    return L"AltDrag";
   }
 
   // Return array of the names of all events that this powertoy listens for, with
   // nullptr as the last element of the array. Nullptr can also be retured for empty
   // list.
-  virtual const wchar_t** get_events() override {
+  virtual PCWSTR* get_events() override {
     static const wchar_t* events[] = { nullptr };
     // Available events:
     // - ll_keyboard
@@ -84,12 +73,13 @@ public:
   }
 
   // Return JSON with the configuration options.
-  virtual bool get_config(wchar_t* buffer, int* buffer_size) override {
+  virtual bool get_config(_Out_ PWSTR buffer, _Out_ int* buffer_size) override 
+  {
     HINSTANCE hinstance = reinterpret_cast<HINSTANCE>(&__ImageBase);
 
     // Create a Settings object.
     PowerToysSettings::Settings settings(hinstance, get_name());
-    settings.set_description(MODULE_DESC);
+    settings.set_description(ALTDRAG_DESCRIPTION);
 
     // Show an overview link in the Settings page
     //settings.set_overview_link(L"https://");
@@ -239,7 +229,7 @@ public:
 };
 
 // Load the settings file.
-void altdrag::init_settings() {
+void AltDragModule::init_settings() {
   try {
     // Load and parse the settings file for this PowerToy.
     PowerToysSettings::PowerToyValues settings =
@@ -278,47 +268,6 @@ void altdrag::init_settings() {
   }
 }
 
-// This method of saving the module settings is only required if you need to do any
-// custom processing of the settings before saving them to disk.
-/*
-void altdrag::save_settings() {
-  try {
-    // Create a PowerToyValues object for this PowerToy
-    PowerToysSettings::PowerToyValues values(get_name());
-
-    // Save a bool property.
-    //values.add_property(
-    //  L"bool_toggle_1", // property name
-    //  g_settings.bool_prop // property value
-    //);
-
-    // Save an int property.
-    //values.add_property(
-    //  L"int_spinner_1", // property name
-    //  g_settings.int_prop // property value
-    //);
-
-    // Save a string property.
-    //values.add_property(
-    //  L"string_text_1", // property name
-    //  g_settings.string_prop // property value
-    );
-
-    // Save a color property.
-    //values.add_property(
-    //  L"color_picker_1", // property name
-    //  g_settings.color_prop // property value
-    //);
-
-    // Save the PowerToyValues JSON to the power toy settings file.
-    values.save_to_settings_file();
-  }
-  catch (std::exception ex) {
-    // Couldn't save the settings.
-  }
-}
-*/
-
 extern "C" __declspec(dllexport) PowertoyModuleIface* __cdecl powertoy_create() {
-  return new altdrag();
+  return new AltDragModule();
 }
