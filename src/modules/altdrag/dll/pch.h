@@ -1,8 +1,17 @@
 #pragma once
-#include "resource.h"
 
 #define WIN32_LEAN_AND_MEAN
-#include <windows.h>
-#include <string>
-#include <common/common.h>
+#include <Unknwn.h>
+#include <winrt/base.h>
 #include <ProjectTelemetry.h>
+#include <TraceLoggingActivity.h>
+#include <wil\common.h>
+#include <wil\result.h>
+
+#include "lib/trace.h"
+#include "lib/resource.h"
+
+namespace winrt
+{
+	using namespace ::winrt;
+}
