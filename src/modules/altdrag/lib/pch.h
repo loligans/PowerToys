@@ -18,6 +18,7 @@
 
 #include "trace.h"
 #include "Settings.h"
+#include "AltDrag.h"
 #include "common/common.h"
 
 #pragma comment(lib, "windowsapp")
