@@ -26,5 +26,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="altdrag.def" />
   </ItemGroup>
 </Project>

@@ -17,3 +17,12 @@
 #include <psapi.h>
 
 #include "trace.h"
+#include "Settings.h"
+#include "common/common.h"
+
+#pragma comment(lib, "windowsapp")
+
+namespace winrt
+{
+    using namespace ::winrt;
+}

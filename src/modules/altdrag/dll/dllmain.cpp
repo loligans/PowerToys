@@ -1,8 +1,8 @@
 #include "pch.h"
+#include <common/settings_objects.h>
 #include <interface/powertoy_module_interface.h>
 #include <interface/lowlevel_keyboard_event_data.h>
 #include <interface/win_hook_event_data.h>
-#include <common/settings_objects.h>
 
 extern "C" IMAGE_DOS_HEADER __ImageBase;
 
@@ -22,16 +22,6 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpReser
 	}
 	return TRUE;
 }
-
-struct AltDragSettings
-{
-	std::wstring left_mouse_action = L"Nothing";
-	std::wstring middle_mouse_action = L"Move window";
-	std::wstring right_mouse_action = L"Resize window";
-	std::wstring scroll_wheel_action = L"Nothing";
-
-	std::wstring hotkey = L"Alt";
-} g_settings;
 
 // Implement the PowerToy Module Interface and all the required methods.
 class AltDragModule : public PowertoyModuleIface
