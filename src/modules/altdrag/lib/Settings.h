@@ -30,12 +30,12 @@ struct Settings
     Action leftMouseButton = Action::Nothing;
 	Action middleMouseButton = Action::Nothing;
 	Action rightMouseButton = Action::Nothing;
-    PowerToysSettings::HotkeyObject activationHotkey;
+    PowerToysSettings::HotkeyObject activationHotkey = PowerToysSettings::HotkeyObject::from_settings(false, false, true, false, VK_MENU, L"");
 };
 
 interface __declspec(uuid("{C47261B6-EC9B-4E5C-9192-1D138CB97E03}")) IAltDragSettings : public IUnknown
 {
-    //IFACEMETHOD_(void, SetCallback)(interface IFancyZonesCallback* callback) = 0;
+    IFACEMETHOD_(void, SetCallback)(interface IAltDragCallback* callback) = 0;
     IFACEMETHOD_(bool, GetConfig)(_Out_ PWSTR buffer, _Out_ int* buffer_size) = 0;
     IFACEMETHOD_(void, SetConfig)(PCWSTR config) = 0;
     IFACEMETHOD_(void, CallCustomAction)(PCWSTR action) = 0;
