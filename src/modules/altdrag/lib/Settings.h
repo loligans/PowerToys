@@ -14,8 +14,6 @@ enum class Action
     Minimize,
     /* Lower the window. */
     Lower,
-    /* Make a window topmost. */
-    AlwaysOnTop,
     /* Center a window on the screen. */
     Center,
     /* Close a window. */
@@ -23,8 +21,8 @@ enum class Action
 };
 struct Settings
 {
-    bool focusWindowWhenDragging = false;
-    bool lowerWindowByMiddleClickingTitleBar = false;
+    bool focusWindow_WhenDragging = false;
+    bool lowerWindow_MiddleClickTitleBar = false;
     bool snapToScreenBorders = false;
     bool snapToOutsideOtherWindows = false;
     Action leftMouseButton = Action::Nothing;

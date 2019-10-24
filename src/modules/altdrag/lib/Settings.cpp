@@ -32,9 +32,23 @@ private:
         PCWSTR name;
         bool* value;
         int resourceId;
-    } m_configBools[1] = {
-        { L"", &m_settings.focusWindowWhenDragging, 101 }
+    } m_configBools[4] = {
+		{ L"altdrag_focusWindowWhenDragging", &m_settings.focusWindowWhenDragging, 101 },
+		{ L"altdrag_lowerWindowByMiddleClickingTitleBar", &m_settings.lowerWindowByMiddleClickingTitleBar, 101 },
+		{ L"altdrag_snapToScreenBorders", &m_settings.snapToScreenBorders, 101 },
+		{ L"altdrag_snapToOutsideOtherWindows", &m_settings.snapToOutsideOtherWindows, 101 },
     };
+
+	struct
+	{
+		PCWSTR name;
+		Action* value;
+		int resourceId;
+	} m_configActions[3] = {
+		{ L"altdrag_leftMouseButton", &m_settings.leftMouseButton, 101 },
+		{ L"altdrag_middleMouseButton", &m_settings.middleMouseButton, 101 },
+		{ L"altdrag_rightMouseButton", &m_settings.rightMouseButton, 101 }
+	};
 };
 
 IFACEMETHODIMP_(bool) AltDragSettings::GetConfig(_Out_ PWSTR buffer, _Out_ int* buffer_sizeg) noexcept
