@@ -10,6 +10,7 @@
 
 #include "lib/trace.h"
 #include "lib/resource.h"
+#include "lib/AltDrag.h"
 #include "lib/Settings.h"
 
 namespace winrt

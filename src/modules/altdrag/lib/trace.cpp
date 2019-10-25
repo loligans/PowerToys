@@ -16,11 +16,18 @@ void Trace::UnregisterProvider() {
   TraceLoggingUnregister(g_hProvider);
 }
 
-void Trace::MyEvent() {
-  TraceLoggingWrite(
-    g_hProvider,
-    "PowerToyName::Event::MyEvent",
-    ProjectTelemetryPrivacyDataTag(ProjectTelemetryTag_ProductAndServicePerformance),
-    TraceLoggingBoolean(TRUE, "UTCReplace_AppSessionGuid"),
-    TraceLoggingKeyword(PROJECT_KEYWORD_MEASURE));
+void Trace::SettingsChanged(const Settings& settings) noexcept
+{
+    TraceLoggingWrite(
+        g_hProvider,
+        "AltDrag::Event::SettingsChanged",
+        ProjectTelemetryPrivacyDataTag(ProjectTelemetryTag_ProductAndServicePerformance),
+        TraceLoggingKeyword(PROJECT_KEYWORD_MEASURE),
+        TraceLoggingBoolean(settings.focusWindow_WhenDragging, ""),
+        TraceLoggingBoolean(settings.lowerWindow_MiddleClickTitleBar, ""),
+        TraceLoggingBoolean(settings.snapToScreenBorders, ""),
+        TraceLoggingBoolean(settings.snapToOutsideOtherWindows, ""),
+        TraceLoggingValue(static_cast<int>(settings.leftMouseButton), ""),
+        TraceLoggingValue(static_cast<int>(settings.middleMouseButton), ""),
+        TraceLoggingValue(static_cast<int>(settings.rightMouseButton), ""));
 }

@@ -26,31 +26,8 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpReser
 // Implement the PowerToy Module Interface and all the required methods.
 class AltDragModule : public PowertoyModuleIface
 {
-private:
-	// The PowerToy state.
-	bool m_enabled = true;
-
-	// Load initial settings from the persisted values.
-	void init_settings();
-
-	intptr_t HandleKeyboardHookEvent(LowlevelKeyboardEvent* data) noexcept;
-	void HandleWinHookEvent(WinHookEvent* data) noexcept;
-	void MoveSizeStart(HWND window, POINT const& ptScreen) noexcept {}
-	void MoveSizeEnd(HWND window, POINT const& ptScreen) noexcept {}
-	void MoveSizeUpdate(POINT const& ptScreen) noexcept {}
-
 public:
-	// Constructor
-	AltDragModule()
-	{
-		init_settings();
-	};
-
-	virtual void destroy() override
-	{
-		delete this;
-	}
-
+    // Return the display name of the powertoy, this will be cached
 	virtual PCWSTR get_name() override
 	{
 		return L"AltDrag";
@@ -68,154 +45,94 @@ public:
 	// Return JSON with the configuration options.
 	virtual bool get_config(_Out_ PWSTR buffer, _Out_ int* buffer_size) override
 	{
-		HINSTANCE hinstance = reinterpret_cast<HINSTANCE>(&__ImageBase);
-
-		// Create a Settings object.
-		PowerToysSettings::Settings settings(hinstance, get_name());
-		settings.set_description(ALTDRAG_DESCRIPTION);
-
-		// Show an overview link in the Settings page
-		//settings.set_overview_link(L"https://");
-
-		// Show a video link in the Settings page.
-		//settings.set_video_link(L"https://");
-
-		// A bool property with a toggle editor.
-		/*settings.add_bool_toogle(
-		  L"bool_toggle_1", // property name.
-		  L"This is what a BoolToggle property looks like", // description or resource id of the localized string.
-		  g_settings.bool_prop // property value.
-		);*/
-
-		// An integer property with a spinner editor.
-		/*settings.add_int_spinner(
-		  L"int_spinner_1", // property name
-		  L"This is what a IntSpinner property looks like", // description or resource id of the localized string.
-		  g_settings.int_prop, // property value.
-		  0, // min value.
-		  100, // max value.
-		  10 // incremental step.
-		);*/
-
-		// A string property with a textbox editor.
-		/*settings.add_string(
-		  L"string_text_1", // property name.
-		  L"This is what a String property looks like", // description or resource id of the localized string.
-		  g_settings.string_prop // property value.
-		);*/
-
-		// A string property with a color picker editor.
-		/*settings.add_color_picker(
-		  L"color_picker_1", // property name.
-		  L"This is what a ColorPicker property looks like", // description or resource id of the localized string.
-		  g_settings.color_prop // property value.
-		);*/
-
-		// A custom action property. When using this settings type, the "PowertoyModuleIface::call_custom_action()"
-		// method should be overriden as well.
-		/*settings.add_custom_action(
-		  L"custom_action_id", // action name.
-		  L"This is what a CustomAction property looks like", // label above the field.
-		  L"Call a custom action", // button text.
-		  L"Press the button to call a custom action." // display values / extended info.
-		);*/
-
-		return settings.serialize_to_buffer(buffer, buffer_size);
-	}
-
-	// Signal from the Settings editor to call a custom action.
-	// This can be used to spawn more complex editors.
-	virtual void call_custom_action(const wchar_t* action) override
-	{
-
+        return m_settings->GetConfig(buffer, buffer_size);
 	}
 
 	// Called by the runner to pass the updated settings values as a serialized JSON.
 	virtual void set_config(const wchar_t* config) override
 	{
-		try
-		{
-			// Parse the input JSON string.
-			PowerToysSettings::PowerToyValues values =
-				PowerToysSettings::PowerToyValues::from_json_string(config);
-
-			// Update a bool property.
-			/*
-			if (values.is_bool_value(L"bool_toggle_1")) {
-			  g_settings.bool_prop = values.get_bool_value(L"bool_toggle_1");
-			}
-			*/
-
-			// Update an int property.
-			/*
-			if (values.is_int_value(L"int_spinner_1")) {
-			  g_settings.int_prop = values.get_int_value(L"int_spinner_1");
-			}
-			*/
-
-			// Update a string property.
-			/*
-			if (values.is_string_value(L"string_text_1")) {
-			  g_settings.string_prop = values.get_string_value(L"string_text_1");
-			}
-			*/
-
-			// Update a color property.
-			/*
-			if (values.is_string_value(L"color_picker_1")) {
-			  g_settings.color_prop = values.get_string_value(L"color_picker_1");
-			}
-			*/
-
-			// If you don't need to do any custom processing of the settings, proceed
-			// to persists the values calling:
-			values.save_to_settings_file();
-			// Otherwise call a custom function to process the settings before saving them to disk:
-			// save_settings();
-		}
-		catch (std::exception ex)
-		{
-			// Improper JSON.
-		}
+        m_settings->SetConfig(config);
 	}
+
+    // Signal from the Settings editor to call a custom action.
+    // This can be used to spawn more complex editors.
+    /*virtual void call_custom_action(const wchar_t* action) override
+    {
+
+    }*/
 
 	// Enable the powertoy
 	virtual void enable()
 	{
-		m_enabled = true;
+        if (!m_app)
+        {
+            // TODO: Trace event
+            m_app = MakeAltDrag(reinterpret_cast<HINSTANCE>(&__ImageBase), m_settings.get());
+            if (m_app)
+            {
+                m_app->Run();
+            }
+        }
 	}
 
 	// Disable the powertoy
 	virtual void disable()
 	{
-		m_enabled = false;
+        if (m_app)
+        {
+            // TODO: Trace event
+            m_app->Destroy();
+            m_app = nullptr;
+        }
 	}
 
 	// Returns if the powertoys is enabled
 	virtual bool is_enabled() override
 	{
-		return m_enabled;
+		return (m_app != nullptr);
 	}
 
 	// Handle incoming event, data is event-specific
 	virtual intptr_t signal_event(const wchar_t* name, intptr_t data)  override
 	{
-		if (wcscmp(name, ll_keyboard) == 0)
-		{
-			auto& event = *(reinterpret_cast<LowlevelKeyboardEvent*>(data));
-
-			// Return 1 if the keypress is to be suppressed (not forwarded to Windows),
-			// otherwise return 0.
-			return 0;
-		}
-		else if (wcscmp(name, win_hook_event) == 0)
-		{
-			auto& event = *(reinterpret_cast<WinHookEvent*>(data));
-			// Return value is ignored
-			return 0;
-		}
+        if (m_app)
+        {
+		    if (wcscmp(name, ll_keyboard) == 0)
+		    {
+                // Return 1 if the keypress is to be suppressed (not forwarded to Windows), otherwise return 0.
+                return HandleKeyboardHookEvent(reinterpret_cast<LowlevelKeyboardEvent*>(data));
+		    }
+		    else if (wcscmp(name, win_hook_event) == 0)
+		    {
+                // Return value is ignored
+                HandleWinHookEvent(reinterpret_cast<WinHookEvent*>(data));
+		    }
+        }
 		return 0;
 	}
+
+    // Destroy the powertoy and free memory
+    virtual void destroy() override
+    {
+        disable();
+        delete this;
+    }
+
+    AltDragModule()
+    {
+        m_settings = MakeAltDragSettings(reinterpret_cast<HINSTANCE>(&__ImageBase), AltDragModule::get_name());
+    };
+
+private:
+    winrt::com_ptr<IAltDrag> m_app;
+    winrt::com_ptr<IAltDragSettings> m_settings;
+
+    intptr_t HandleKeyboardHookEvent(LowlevelKeyboardEvent* data) noexcept;
+    void HandleWinHookEvent(WinHookEvent* data) noexcept;
+    void MoveSizeStart(HWND window, POINT const& ptScreen) noexcept {}
+    void MoveSizeEnd(HWND window, POINT const& ptScreen) noexcept {}
+    void MoveSizeUpdate(POINT const& ptScreen) noexcept {}
+
 };
 
 intptr_t AltDragModule::HandleKeyboardHookEvent(LowlevelKeyboardEvent* data) noexcept
@@ -244,49 +161,6 @@ void AltDragModule::HandleWinHookEvent(WinHookEvent* data) noexcept
 		// 
 		MoveSizeUpdate(ptScreen);
 		break;
-	}
-}
-
-// Load the settings file.
-void AltDragModule::init_settings()
-{
-	try
-	{
-		// Load and parse the settings file for this PowerToy.
-		PowerToysSettings::PowerToyValues settings =
-			PowerToysSettings::PowerToyValues::load_from_settings_file(get_name());
-
-		// Load a bool property.
-		/*
-		if (settings.is_bool_value(L"bool_toggle_1")) {
-		  g_settings.bool_prop = settings.get_bool_value(L"bool_toggle_1");
-		}
-		*/
-
-		// Load an int property.
-		/*
-		if (settings.is_int_value(L"int_spinner_1")) {
-		  g_settings.int_prop = settings.get_int_value(L"int_spinner_1");
-		}
-		*/
-
-		// Load a string property.
-		/*
-		if (settings.is_string_value(L"string_text_1")) {
-		  g_settings.string_prop = settings.get_string_value(L"string_text_1");
-		}
-		*/
-
-		// Load a color property.
-		/*
-		if (settings.is_string_value(L"color_picker_1")) {
-		  g_settings.color_prop = settings.get_string_value(L"color_picker_1");
-		}
-		*/
-	}
-	catch (std::exception ex)
-	{
-		// Error while loading from the settings file. Let default values stay as they are.
 	}
 }
 
