@@ -10,9 +10,9 @@ Inspired by the [Windows 95 era PowerToys project](https://en.wikipedia.org/wiki
 
 _(Note: in order to run PowerToys, you'll need to be running at least Windows build 17134 or higher.  Also, PowerToys does not currently support Windows ARM machines)_
 
-### Github
+### GitHub
 
-The first preview of these utilities can be installed from [here](https://github.com/Microsoft/powertoys/releases).
+The first preview of these utilities can be installed from the [PowerToys GitHub releases page](https://github.com/Microsoft/powertoys/releases).
 
 ### Chocolatey (Unofficial)
 
@@ -39,7 +39,7 @@ If you have any issues when installing/upgrading the package please go to the [p
 ## October Update
 A big thanks to everyone who has downloaded and started using the first PowerToys preview.  There's been over 150K downloads so far.  An even bigger thanks to everyone who has provided feedback and suggestions in the issues.  The community engagement has been really awesome to see.  
 
-The team has been hard at working fixing bugs, addressing issues and implementing feature suggestions.  If you've downloaded the code and built the latest on your machine recently you've seen many of these improvements (dark mode!).  We're hoping to have a new official build out shortly with all these improvements and will also be signed by Microsoft.  A new utilitity is also coming soon: Chris Davis is working to integrate his [SmartRename tool](https://github.com/chrdavis/SmartRename) into PowerToys!
+The team has been hard at working fixing bugs, addressing issues and implementing feature suggestions.  If you've downloaded the code and built the latest on your machine recently you've seen many of these improvements (dark mode!).  We're hoping to have a new official build out shortly with all these improvements and will also be signed by Microsoft.  A new utility is also coming soon: Chris Davis is working to integrate his [SmartRename tool](https://github.com/chrdavis/SmartRename) into PowerToys!
 
 ![SmartRename](https://github.com/chrdavis/SmartRename/raw/master/Images/SmartRenameDemo.gif)
 
@@ -120,10 +120,10 @@ We ask that **before you start work on a feature that you would like to contribu
 
 > ⚠ **Note**: PowerToys is still a nascent project and the team is actively working out of this repository.  We will be periodically re-structuring the code to make it easier to comprehend, navigate, build, test, and contribute to, so **DO expect significant changes to code layout on a regular basis**.
 
-> ⚠ **License Info**: Most contributions require you to agree to a Contributor License Agreement (CLA) declaring that you have the right to, and actually do, grant us the rights to use your contribution. For details, visit https://cla.microsoft.com.
+> ⚠ **License Info**: Most contributions require you to agree to a Contributor License Agreement (CLA) declaring that you have the right to, and actually do, grant us the rights to use your contribution. For details, visit https://cla.opensource.microsoft.com.
 
 When you submit a pull request, a CLA-bot will automatically determine whether you need to provide
-a CLA and decorate the PR appropriately (e.g., label, comment). Simply follow the instructions
+a CLA and decorate the PR appropriately (e.g. status check, comment). Simply follow the instructions
 provided by the bot. You will only need to do this once across all repos using our CLA.
 
 # Code of Conduct
