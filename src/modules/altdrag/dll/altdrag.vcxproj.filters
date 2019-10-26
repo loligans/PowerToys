@@ -28,4 +28,7 @@
     <None Include="packages.config" />
     <None Include="altdrag.def" />
   </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\lib\altdrag.rc" />
+  </ItemGroup>
 </Project>
