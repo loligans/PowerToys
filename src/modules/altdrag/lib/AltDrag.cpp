@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "common/dpi_aware.h"
 
-struct AltDrag : public winrt::implements<IAltDrag, IAltDragCallback>
+struct AltDrag : public winrt::implements<AltDrag, IAltDrag, IAltDragCallback>
 {
 public:
     AltDrag(HINSTANCE hinstance, IAltDragSettings* settings) noexcept
@@ -131,7 +131,7 @@ IFACEMETHODIMP_(void) AltDrag::WindowCreated(HWND window) noexcept
 // IAltDragCallback
 IFACEMETHODIMP_(bool) AltDrag::OnKeyDown(PKBDLLHOOKSTRUCT info) noexcept
 {
-
+	return false;
 }
 
 // IAltDragCallback
