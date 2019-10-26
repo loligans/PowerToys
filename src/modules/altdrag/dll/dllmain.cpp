@@ -54,13 +54,6 @@ public:
         m_settings->SetConfig(config);
 	}
 
-    // Signal from the Settings editor to call a custom action.
-    // This can be used to spawn more complex editors.
-    /*virtual void call_custom_action(const wchar_t* action) override
-    {
-
-    }*/
-
 	// Enable the powertoy
 	virtual void enable()
 	{
@@ -129,17 +122,16 @@ private:
 
     intptr_t HandleKeyboardHookEvent(LowlevelKeyboardEvent* data) noexcept;
     void HandleWinHookEvent(WinHookEvent* data) noexcept;
-    void MoveSizeStart(HWND window, POINT const& ptScreen) noexcept {}
-    void MoveSizeEnd(HWND window, POINT const& ptScreen) noexcept {}
-    void MoveSizeUpdate(POINT const& ptScreen) noexcept {}
-
+    void MoveSizeStart(HWND window, POINT const& ptScreen) noexcept;
+    void MoveSizeEnd(HWND window, POINT const& ptScreen) noexcept;
+    void MoveSizeUpdate(POINT const& ptScreen) noexcept;
 };
 
 intptr_t AltDragModule::HandleKeyboardHookEvent(LowlevelKeyboardEvent* data) noexcept
 {
 	if (data->wParam == WM_KEYDOWN)
 	{
-		return 0;
+        return m_app.as<IAltDragCallback>()->OnKeyDown(data->lParam) ? 1 : 0;
 	}
 	return 0;
 }
@@ -158,10 +150,37 @@ void AltDragModule::HandleWinHookEvent(WinHookEvent* data) noexcept
 		MoveSizeEnd(data->hwnd, ptScreen);
 		break;
 	case EVENT_OBJECT_LOCATIONCHANGE:
-		// 
-		MoveSizeUpdate(ptScreen);
+        if (m_app.as<IAltDragCallback>()->InMoveSize())
+        {
+		    MoveSizeUpdate(ptScreen);
+        }
 		break;
+    default:
+        break;
 	}
+}
+
+void AltDragModule::MoveSizeStart(HWND window, POINT const& ptScreen) noexcept
+{
+    // TODO: Look into IsInterestingWindow should be used here.
+    if (auto monitor = MonitorFromPoint(ptScreen, MONITOR_DEFAULTTONULL))
+    {
+        m_app.as<IAltDragCallback>()->MoveSizeStart(window, monitor, ptScreen);
+    }
+}
+
+void AltDragModule::MoveSizeEnd(HWND window, POINT const& ptScreen) noexcept
+{
+    // TODO: Look into IsInterestingWindow should be used here.
+    m_app.as<IAltDragCallback>()->MoveSizeEnd(window, ptScreen);
+}
+
+void AltDragModule::MoveSizeUpdate(POINT const& ptScreen) noexcept
+{
+    if (auto monitor = MonitorFromPoint(ptScreen, MONITOR_DEFAULTTONULL))
+    {
+        m_app.as<IAltDragCallback>()->MoveSizeUpdate(monitor, ptScreen);
+    }
 }
 
 extern "C" __declspec(dllexport) PowertoyModuleIface * __cdecl powertoy_create()
