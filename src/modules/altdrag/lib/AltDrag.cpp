@@ -25,6 +25,7 @@ public:
     IFACEMETHODIMP_(void) SettingsChanged() noexcept;
 
 protected:
+	static LRESULT CALLBACK s_WndProc(HWND, UINT, WPARAM, LPARAM) noexcept;
 
 private:
     struct require_read_lock
@@ -156,6 +157,19 @@ void AltDrag::MoveSizeUpdateInternal(HMONITOR monitor, POINT const& ptScreen, re
 void AltDrag::MoveSizeEndInternal(HWND window, POINT const& ptScreen, require_write_lock) noexcept
 {
 
+}
+
+LRESULT CALLBACK AltDrag::s_WndProc(HWND window, UINT message, WPARAM wparam, LPARAM lparam) noexcept
+{
+	auto thisRef = reinterpret_cast<AltDrag*>(GetWindowLongPtr(window, GWLP_USERDATA));
+	if (!thisRef && (message == WM_CREATE))
+	{
+		const auto createStruct = reinterpret_cast<LPCREATESTRUCT>(lparam);
+		thisRef = reinterpret_cast<AltDrag*>(createStruct->lpCreateParams);
+		SetWindowLongPtr(window, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(thisRef));
+	}
+
+	
 }
 
 winrt::com_ptr<IAltDrag> MakeAltDrag(HINSTANCE hinstance, IAltDragSettings* settings) noexcept
