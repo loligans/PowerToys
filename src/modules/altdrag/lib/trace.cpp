@@ -23,11 +23,11 @@ void Trace::SettingsChanged(const Settings& settings) noexcept
         "AltDrag::Event::SettingsChanged",
         ProjectTelemetryPrivacyDataTag(ProjectTelemetryTag_ProductAndServicePerformance),
         TraceLoggingKeyword(PROJECT_KEYWORD_MEASURE),
-        TraceLoggingBoolean(settings.focusWindow_WhenDragging, ""),
-        TraceLoggingBoolean(settings.lowerWindow_MiddleClickTitleBar, ""),
-        TraceLoggingBoolean(settings.snapToScreenBorders, ""),
-        TraceLoggingBoolean(settings.snapToOutsideOtherWindows, ""),
-        TraceLoggingValue(static_cast<int>(settings.leftMouseButton), ""),
-        TraceLoggingValue(static_cast<int>(settings.middleMouseButton), ""),
-        TraceLoggingValue(static_cast<int>(settings.rightMouseButton), ""));
+        TraceLoggingBoolean(settings.focusWindow_WhenDragging, "Focus Window When Dragging"),
+        TraceLoggingBoolean(settings.lowerWindow_MiddleClickTitleBar, "Lower Window By Middle Clicking Title Bar"),
+        TraceLoggingBoolean(settings.snapToScreenBorders, "Snap to the Screen Borders"),
+        TraceLoggingBoolean(settings.snapToOutsideOtherWindows, "Snap to the Outside of Other Windows"),
+        TraceLoggingValue(static_cast<int>(settings.leftMouseButton), "Left Mouse Button Action."),
+        TraceLoggingValue(static_cast<int>(settings.middleMouseButton), "Middle Mouse Button Action."),
+        TraceLoggingValue(static_cast<int>(settings.rightMouseButton), "Right Mouse Button Action."));
 }
