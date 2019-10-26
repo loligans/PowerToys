@@ -14,7 +14,6 @@ public:
     IFACEMETHODIMP_(void) SetCallback(interface IAltDragCallback* callback) { m_callback.attach(callback); }
 	IFACEMETHODIMP_(bool) GetConfig(_Out_ PWSTR buffer, _Out_ int* buffer_sizeg) noexcept;
 	IFACEMETHODIMP_(void) SetConfig(PCWSTR config) noexcept;
-	IFACEMETHODIMP_(void) CallCustomAction(PCWSTR action) noexcept;
 	IFACEMETHODIMP_(Settings) GetSettings() noexcept { return m_settings; }
 
 private:
@@ -33,10 +32,10 @@ private:
         bool* value;
         int resourceId;
     } m_configBools[4] = {
-		{ L"altdrag_focusWindowWhenDragging", &m_settings.focusWindow_WhenDragging, 101 },
-		{ L"altdrag_lowerWindowByMiddleClickingTitleBar", &m_settings.lowerWindow_MiddleClickTitleBar, 101 },
-		{ L"altdrag_snapToScreenBorders", &m_settings.snapToScreenBorders, 101 },
-		{ L"altdrag_snapToOutsideOtherWindows", &m_settings.snapToOutsideOtherWindows, 101 },
+		{ L"altdrag_focusWindowWhenDragging", &m_settings.focusWindow_WhenDragging, ALTDRAG_SETTING_DESCRIPTION_FOCUSWINDOW_WHENDRAGGING },
+		{ L"altdrag_lowerWindowByMiddleClickingTitleBar", &m_settings.lowerWindow_MiddleClickTitleBar, ALTDRAG_SETTING_DESCRIPTION_LOWERWINDOW_MIDDLECLICKTITLEBAR },
+		{ L"altdrag_snapToScreenBorders", &m_settings.snapToScreenBorders, ALTDRAG_SETTING_DESCRIPTION_SNAPTOSCREENBORDERS },
+		{ L"altdrag_snapToOutsideOtherWindows", &m_settings.snapToOutsideOtherWindows, ALTDRAG_SETTING_DESCRIPTION_SNAPTOOUTSIDEOTHERWINDOWS },
     };
 
 	struct
@@ -45,9 +44,9 @@ private:
 		Action* value;
 		int resourceId;
 	} m_configActions[3] = {
-		{ L"altdrag_leftMouseButton", &m_settings.leftMouseButton, 101 },
-		{ L"altdrag_middleMouseButton", &m_settings.middleMouseButton, 101 },
-		{ L"altdrag_rightMouseButton", &m_settings.rightMouseButton, 101 }
+		{ L"altdrag_leftMouseButton", &m_settings.leftMouseButton, ALTDRAG_SETTING_DESCRIPTION_LEFTMOUSEBUTTON },
+		{ L"altdrag_middleMouseButton", &m_settings.middleMouseButton, ALTDRAG_SETTING_DESCRIPTION_MIDDLEMOUSEBUTTON },
+		{ L"altdrag_rightMouseButton", &m_settings.rightMouseButton, ALTDRAG_SETTING_DESCRIPTION_RIGHTMOUSEBUTTON }
 	};
 
     const std::wstring m_activation_hotkey_name = L"altdrag_activation_hotkey";
@@ -89,11 +88,6 @@ IFACEMETHODIMP_(void) AltDragSettings::SetConfig(PCWSTR config) noexcept try
     Trace::SettingsChanged(m_settings);
 }
 CATCH_LOG();
-
-IFACEMETHODIMP_(void) AltDragSettings::CallCustomAction(PCWSTR action) noexcept
-{
-
-}
 
 void AltDragSettings::LoadSettings(PCWSTR config, bool fromFile) noexcept try
 {

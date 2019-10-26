@@ -36,7 +36,6 @@ interface __declspec(uuid("{C47261B6-EC9B-4E5C-9192-1D138CB97E03}")) IAltDragSet
     IFACEMETHOD_(void, SetCallback)(interface IAltDragCallback* callback) = 0;
     IFACEMETHOD_(bool, GetConfig)(_Out_ PWSTR buffer, _Out_ int* buffer_size) = 0;
     IFACEMETHOD_(void, SetConfig)(PCWSTR config) = 0;
-    IFACEMETHOD_(void, CallCustomAction)(PCWSTR action) = 0;
     IFACEMETHOD_(Settings, GetSettings)() = 0;
 };
 
