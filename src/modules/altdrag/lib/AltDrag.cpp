@@ -20,10 +20,8 @@ public:
     IFACEMETHODIMP_(void) MoveSizeStart(HWND window, HMONITOR monitor, POINT const& ptScreen) noexcept;
     IFACEMETHODIMP_(void) MoveSizeUpdate(HMONITOR monitor, POINT const& ptScreen) noexcept;
     IFACEMETHODIMP_(void) MoveSizeEnd(HWND window, POINT const& ptScreen) noexcept;
-    IFACEMETHODIMP_(void) VirtualDesktopChanged() noexcept;
     IFACEMETHODIMP_(void) WindowCreated(HWND window) noexcept;
     IFACEMETHODIMP_(bool) OnKeyDown(PKBDLLHOOKSTRUCT info) noexcept;
-    IFACEMETHODIMP_(void) ToggleEditor() noexcept;
     IFACEMETHODIMP_(void) SettingsChanged() noexcept;
 
 protected:
@@ -122,4 +120,45 @@ IFACEMETHODIMP_(void) AltDrag::MoveSizeEnd(HWND window, POINT const& ptScreen) n
 {
     std::unique_lock writeLock(m_lock);
     MoveSizeEndInternal(window, ptScreen, writeLock);
+}
+
+// IAltDragCallback
+IFACEMETHODIMP_(void) AltDrag::WindowCreated(HWND window) noexcept
+{
+	
+}
+
+// IAltDragCallback
+IFACEMETHODIMP_(bool) AltDrag::OnKeyDown(PKBDLLHOOKSTRUCT info) noexcept
+{
+
+}
+
+// IAltDragCallback
+IFACEMETHODIMP_(void) AltDrag::SettingsChanged() noexcept
+{
+	UnregisterHotKey(m_window, 1);
+	RegisterHotKey(m_window, 1,
+		m_settings->GetSettings().activationHotkey.get_modifiers(),
+		m_settings->GetSettings().activationHotkey.get_code());
+}
+
+void AltDrag::MoveSizeStartInternal(HWND window, HMONITOR monitor, POINT const& ptScreen, require_write_lock writeLock) noexcept
+{
+
+}
+
+void AltDrag::MoveSizeUpdateInternal(HMONITOR monitor, POINT const& ptScreen, require_write_lock writeLock) noexcept
+{
+
+}
+
+void AltDrag::MoveSizeEndInternal(HWND window, POINT const& ptScreen, require_write_lock) noexcept
+{
+
+}
+
+winrt::com_ptr<IAltDrag> MakeAltDrag(HINSTANCE hinstance, IAltDragSettings* settings) noexcept
+{
+	return winrt::make_self<AltDrag>(hinstance, settings);
 }

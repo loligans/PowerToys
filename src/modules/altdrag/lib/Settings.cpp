@@ -64,7 +64,7 @@ IFACEMETHODIMP_(bool) AltDragSettings::GetConfig(_Out_ PWSTR buffer, _Out_ int* 
     settings.add_hotkey(m_activation_hotkey_name, 101, m_settings.activationHotkey);
 
     for (auto const& setting : m_configBools)
-    {
+    { 
         settings.add_bool_toogle(setting.name, setting.resourceId, *setting.value);
     }
 
