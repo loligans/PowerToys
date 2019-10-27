@@ -24,6 +24,8 @@ public:
     IFACEMETHODIMP_(bool) OnKeyDown(PKBDLLHOOKSTRUCT info) noexcept;
     IFACEMETHODIMP_(void) SettingsChanged() noexcept;
 
+	LRESULT WndProc(HWND, UINT, WPARAM, LPARAM) noexcept;
+
 protected:
 	static LRESULT CALLBACK s_WndProc(HWND, UINT, WPARAM, LPARAM) noexcept;
 
@@ -63,7 +65,7 @@ IFACEMETHODIMP_(void) AltDrag::Run() noexcept
 
     WNDCLASSEXW wcex{};
     wcex.cbSize = sizeof(WNDCLASSEX);
-    //wcex.lpfnWndProc = s_WndProc;
+    wcex.lpfnWndProc = s_WndProc;
     wcex.hInstance = m_hinstance;
     wcex.lpszClassName = L"AltDrag";
     RegisterClassExW(&wcex);
@@ -146,7 +148,8 @@ IFACEMETHODIMP_(void) AltDrag::SettingsChanged() noexcept
 
 void AltDrag::MoveSizeStartInternal(HWND window, HMONITOR monitor, POINT const& ptScreen, require_write_lock writeLock) noexcept
 {
-
+	RECT windowRect{};
+	::GetWindowRect(window, &windowRect);
 }
 
 void AltDrag::MoveSizeUpdateInternal(HMONITOR monitor, POINT const& ptScreen, require_write_lock writeLock) noexcept
@@ -159,6 +162,11 @@ void AltDrag::MoveSizeEndInternal(HWND window, POINT const& ptScreen, require_wr
 
 }
 
+LRESULT AltDrag::WndProc(HWND window, UINT message, WPARAM wparam, LPARAM lparam) noexcept
+{
+	return DefWindowProc(window, message, wparam, lparam);
+}
+
 LRESULT CALLBACK AltDrag::s_WndProc(HWND window, UINT message, WPARAM wparam, LPARAM lparam) noexcept
 {
 	auto thisRef = reinterpret_cast<AltDrag*>(GetWindowLongPtr(window, GWLP_USERDATA));
@@ -169,7 +177,10 @@ LRESULT CALLBACK AltDrag::s_WndProc(HWND window, UINT message, WPARAM wparam, LP
 		SetWindowLongPtr(window, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(thisRef));
 	}
 
-	
+	return thisRef ?
+		thisRef->WndProc(window, message, wparam, lparam) :
+		DefWindowProc(window, message, wparam, lparam);
+
 }
 
 winrt::com_ptr<IAltDrag> MakeAltDrag(HINSTANCE hinstance, IAltDragSettings* settings) noexcept
