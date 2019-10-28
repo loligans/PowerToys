@@ -38,7 +38,7 @@ public:
 	// list.
 	virtual PCWSTR* get_events() override
 	{
-		static const wchar_t* events[] = { ll_keyboard, win_hook_event, nullptr };
+		static const wchar_t* events[] = { ll_keyboard, nullptr };
 		return events;
 	}
 
@@ -98,7 +98,7 @@ public:
 		    else if (wcscmp(name, win_hook_event) == 0)
 		    {
                 // Return value is ignored
-                HandleWinHookEvent(reinterpret_cast<WinHookEvent*>(data));
+                // HandleWinHookEvent(reinterpret_cast<WinHookEvent*>(data));
 		    }
         }
 		return 0;
