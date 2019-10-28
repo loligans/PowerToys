@@ -135,8 +135,15 @@ IFACEMETHODIMP_(void) AltDrag::WindowCreated(HWND window) noexcept
 // IAltDragCallback
 IFACEMETHODIMP_(bool) AltDrag::OnKeyDown(PKBDLLHOOKSTRUCT info) noexcept
 {
-	bool const shift = GetAsyncKeyState(VK_SHIFT) & 0x8000;
+	PowerToysSettings::HotkeyObject activateHotkey = m_settings->GetSettings().activationHotkey;
+	activateHotkey.get_modifiers();
+	bool const ctrl = GetAsyncKeyState(VK_CONTROL) & 0x8000;
 	bool const win = GetAsyncKeyState(VK_LWIN) & 0x8000;
+	bool const alt = GetAsyncKeyState(VK_MENU) & 0x8000;
+	if (ctrl || win || alt)
+	{
+		MessageBox(nullptr, L"Key Pressed", L"OnKeyDown", MB_OK);
+	}
 	// MessageBox(nullptr, L"Key Pressed", L"OnKeyDown", MB_OK);
 	return false;
 }
