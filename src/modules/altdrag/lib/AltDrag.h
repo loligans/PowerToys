@@ -16,7 +16,7 @@ interface __declspec(uuid("{965BC508-EE6D-42CE-9255-81F5BA076661}")) IAltDragCal
     IFACEMETHOD_(void, MoveSizeEnd)(HWND window, POINT const& ptScreen) = 0;
     IFACEMETHOD_(void, WindowCreated)(HWND window) = 0;
 	IFACEMETHOD_(bool, OnKeyDown)(PKBDLLHOOKSTRUCT info) = 0;
-	IFACEMETHOD_(bool, OnKeyUp)(PKBDLLHOOKSTRUCT info) = 0;
+	IFACEMETHOD_(bool, OnMouseDown)(PMOUSEHOOKSTRUCT info) = 0;
     IFACEMETHOD_(void, SettingsChanged)() = 0;
 };
 

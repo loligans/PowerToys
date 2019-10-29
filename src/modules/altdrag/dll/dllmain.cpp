@@ -133,10 +133,6 @@ intptr_t AltDragModule::HandleKeyboardHookEvent(LowlevelKeyboardEvent* data) noe
 	{
         return m_app.as<IAltDragCallback>()->OnKeyDown(data->lParam) ? 1 : 0;
 	}
-	else if (data->wParam == WM_KEYUP || data->wParam == WM_SYSKEYUP)
-	{
-		return m_app.as<IAltDragCallback>()->OnKeyUp(data->lParam) ? 1 : 0;
-	}
 	return 0;
 }
 

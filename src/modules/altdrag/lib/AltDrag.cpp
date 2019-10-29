@@ -16,13 +16,12 @@ public:
     IFACEMETHODIMP_(void) Destroy() noexcept;
 
     // IAltDrag
-    IFACEMETHODIMP_(bool) InMoveSize() noexcept { std::shared_lock readLock(m_lock); return m_inMoveSize; }
+    IFACEMETHODIMP_(bool) HotkeyActivated() noexcept { std::shared_lock readLock(m_lock); return m_hotkeyActivated; }
     IFACEMETHODIMP_(void) MoveSizeStart(HWND window, HMONITOR monitor, POINT const& ptScreen) noexcept;
     IFACEMETHODIMP_(void) MoveSizeUpdate(HMONITOR monitor, POINT const& ptScreen) noexcept;
     IFACEMETHODIMP_(void) MoveSizeEnd(HWND window, POINT const& ptScreen) noexcept;
     IFACEMETHODIMP_(void) WindowCreated(HWND window) noexcept;
 	IFACEMETHODIMP_(bool) OnKeyDown(PKBDLLHOOKSTRUCT info) noexcept;
-	IFACEMETHODIMP_(bool) OnKeyUp(PKBDLLHOOKSTRUCT info) noexcept;
     IFACEMETHODIMP_(void) SettingsChanged() noexcept;
 
 	LRESULT WndProc(HWND, UINT, WPARAM, LPARAM) noexcept;
@@ -55,7 +54,7 @@ private:
     mutable std::shared_mutex m_lock;
     HWND m_window{};
     HWND m_windowMoveSize{};
-    bool m_inMoveSize{};
+    bool m_hotkeyActivated{};
     winrt::com_ptr<IAltDragSettings> m_settings;
 };
 
@@ -135,27 +134,11 @@ IFACEMETHODIMP_(void) AltDrag::WindowCreated(HWND window) noexcept
 // IAltDragCallback
 IFACEMETHODIMP_(bool) AltDrag::OnKeyDown(PKBDLLHOOKSTRUCT info) noexcept
 {
-	PowerToysSettings::HotkeyObject activateHotkey = m_settings->GetSettings().activationHotkey;
-	activateHotkey.get_modifiers();
-	bool const ctrl = GetAsyncKeyState(VK_CONTROL) & 0x8000;
-	bool const win = GetAsyncKeyState(VK_LWIN) & 0x8000;
-	bool const alt = GetAsyncKeyState(VK_MENU) & 0x8000;
-	if (ctrl || win || alt)
-	{
-		MessageBox(nullptr, L"Key Pressed", L"OnKeyDown", MB_OK);
-	}
-	// MessageBox(nullptr, L"Key Pressed", L"OnKeyDown", MB_OK);
-	return false;
+	m_hotkeyActivated = GetAsyncKeyState(VK_LMENU) & 0x8000;
+	return m_hotkeyActivated;
 }
 
-// IAltDragCallback
-IFACEMETHODIMP_(bool) AltDrag::OnKeyUp(PKBDLLHOOKSTRUCT info) noexcept
-{
-	bool const shift = GetAsyncKeyState(VK_SHIFT) & 0x8000;
-	bool const win = GetAsyncKeyState(VK_LWIN) & 0x8000;
-	// MessageBox(nullptr, L"Key Pressed", L"OnKeyDown", MB_OK);
-	return false;
-}
+
 
 // IAltDragCallback
 IFACEMETHODIMP_(void) AltDrag::SettingsChanged() noexcept
