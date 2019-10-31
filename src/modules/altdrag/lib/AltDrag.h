@@ -10,13 +10,11 @@ interface __declspec(uuid("{C62903CC-9096-41D0-A9A5-1E4100B1C417}")) IAltDrag : 
 
 interface __declspec(uuid("{965BC508-EE6D-42CE-9255-81F5BA076661}")) IAltDragCallback : public IUnknown
 {
-    IFACEMETHOD_(bool, InMoveSize)() = 0;
     IFACEMETHOD_(void, MoveSizeStart)(HWND window, HMONITOR monitor, POINT const& ptScreen) = 0;
     IFACEMETHOD_(void, MoveSizeUpdate)(HMONITOR monitor, POINT const& ptScreen) = 0;
     IFACEMETHOD_(void, MoveSizeEnd)(HWND window, POINT const& ptScreen) = 0;
     IFACEMETHOD_(void, WindowCreated)(HWND window) = 0;
 	IFACEMETHOD_(bool, OnKeyDown)(PKBDLLHOOKSTRUCT info) = 0;
-	IFACEMETHOD_(bool, OnMouseDown)(PMOUSEHOOKSTRUCT info) = 0;
     IFACEMETHOD_(void, SettingsChanged)() = 0;
 };
 

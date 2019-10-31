@@ -3,6 +3,7 @@
 #include <interface/powertoy_module_interface.h>
 #include <interface/lowlevel_keyboard_event_data.h>
 #include <interface/win_hook_event_data.h>
+#include <interface/lowlevel_mouse_event_data.h>
 
 extern "C" IMAGE_DOS_HEADER __ImageBase;
 
@@ -38,7 +39,7 @@ public:
 	// list.
 	virtual PCWSTR* get_events() override
 	{
-		static const wchar_t* events[] = { ll_keyboard, nullptr };
+		static const wchar_t* events[] = { ll_keyboard, ll_mouse, nullptr };
 		return events;
 	}
 
@@ -100,6 +101,10 @@ public:
                 // Return value is ignored
                 // HandleWinHookEvent(reinterpret_cast<WinHookEvent*>(data));
 		    }
+			else if (wcscmp(name, ll_mouse) == 0)
+			{
+				return HandleMouseHookEvent(reinterpret_cast<LowlevelMouseEvent*>(data));
+			}
         }
 		return 0;
 	}
@@ -121,6 +126,7 @@ private:
     winrt::com_ptr<IAltDragSettings> m_settings;
 
     intptr_t HandleKeyboardHookEvent(LowlevelKeyboardEvent* data) noexcept;
+	intptr_t HandleMouseHookEvent(LowlevelMouseEvent* data) noexcept;
     void HandleWinHookEvent(WinHookEvent* data) noexcept;
     void MoveSizeStart(HWND window, POINT const& ptScreen) noexcept;
     void MoveSizeEnd(HWND window, POINT const& ptScreen) noexcept;
@@ -133,6 +139,11 @@ intptr_t AltDragModule::HandleKeyboardHookEvent(LowlevelKeyboardEvent* data) noe
 	{
         return m_app.as<IAltDragCallback>()->OnKeyDown(data->lParam) ? 1 : 0;
 	}
+	return 0;
+}
+
+intptr_t AltDragModule::HandleMouseHookEvent(LowlevelMouseEvent* data) noexcept
+{
 	return 0;
 }
 
@@ -150,10 +161,10 @@ void AltDragModule::HandleWinHookEvent(WinHookEvent* data) noexcept
 		MoveSizeEnd(data->hwnd, ptScreen);
 		break;
 	case EVENT_OBJECT_LOCATIONCHANGE:
-        if (m_app.as<IAltDragCallback>()->InMoveSize())
+        /*if (m_app.as<IAltDragCallback>()->InMoveSize())
         {
 		    MoveSizeUpdate(ptScreen);
-        }
+        }*/
 		break;
     default:
         break;

@@ -15,7 +15,7 @@ public:
     IFACEMETHODIMP_(void) Run() noexcept;
     IFACEMETHODIMP_(void) Destroy() noexcept;
 
-    // IAltDrag
+    // IAltDragCallback
     IFACEMETHODIMP_(bool) HotkeyActivated() noexcept { std::shared_lock readLock(m_lock); return m_hotkeyActivated; }
     IFACEMETHODIMP_(void) MoveSizeStart(HWND window, HMONITOR monitor, POINT const& ptScreen) noexcept;
     IFACEMETHODIMP_(void) MoveSizeUpdate(HMONITOR monitor, POINT const& ptScreen) noexcept;
