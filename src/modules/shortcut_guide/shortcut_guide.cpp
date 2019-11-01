@@ -80,6 +80,7 @@ void OverlayWindow::set_config(const wchar_t * config) {
       winkey_popup->set_theme(theme.value);
     }
     _values.save_to_settings_file();
+    Trace::SettingsChanged(pressTime.value, overlayOpacity.value, theme.value);
   }
   catch (std::exception&) {
     // Improper JSON.
@@ -143,6 +144,10 @@ void OverlayWindow::on_held() {
 
 void OverlayWindow::on_held_press(DWORD vkCode) {
   winkey_popup->animate(vkCode);
+}
+
+void OverlayWindow::quick_hide() {
+  winkey_popup->quick_hide();
 }
 
 void OverlayWindow::was_hidden() {
