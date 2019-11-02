@@ -17,11 +17,9 @@ public:
 
     // IAltDragCallback
     IFACEMETHODIMP_(bool) HotkeyActivated() noexcept { std::shared_lock readLock(m_lock); return m_hotkeyActivated; }
-    IFACEMETHODIMP_(void) MoveSizeStart(HWND window, HMONITOR monitor, POINT const& ptScreen) noexcept;
-    IFACEMETHODIMP_(void) MoveSizeUpdate(HMONITOR monitor, POINT const& ptScreen) noexcept;
-    IFACEMETHODIMP_(void) MoveSizeEnd(HWND window, POINT const& ptScreen) noexcept;
     IFACEMETHODIMP_(void) WindowCreated(HWND window) noexcept;
 	IFACEMETHODIMP_(bool) OnKeyDown(PKBDLLHOOKSTRUCT info) noexcept;
+    IFACEMETHODIMP_(void) OnMouseDown(MSLLHOOKSTRUCT info) noexcept;
     IFACEMETHODIMP_(void) SettingsChanged() noexcept;
 
 	LRESULT WndProc(HWND, UINT, WPARAM, LPARAM) noexcept;
@@ -105,27 +103,6 @@ IFACEMETHODIMP_(void) AltDrag::Destroy() noexcept
 }
 
 // IAltDragCallback
-IFACEMETHODIMP_(void) AltDrag::MoveSizeStart(HWND window, HMONITOR monitor, POINT const& ptScreen) noexcept
-{
-    std::unique_lock writeLock(m_lock);
-    MoveSizeStartInternal(window, monitor, ptScreen, writeLock);
-}
-
-// IAltDragCallback
-IFACEMETHODIMP_(void) AltDrag::MoveSizeUpdate(HMONITOR monitor, POINT const& ptScreen) noexcept
-{
-    std::unique_lock writeLock(m_lock);
-    MoveSizeUpdateInternal(monitor, ptScreen, writeLock);
-}
-
-// IAltDragCallback
-IFACEMETHODIMP_(void) AltDrag::MoveSizeEnd(HWND window, POINT const& ptScreen) noexcept
-{
-    std::unique_lock writeLock(m_lock);
-    MoveSizeEndInternal(window, ptScreen, writeLock);
-}
-
-// IAltDragCallback
 IFACEMETHODIMP_(void) AltDrag::WindowCreated(HWND window) noexcept
 {
 	
@@ -147,22 +124,6 @@ IFACEMETHODIMP_(void) AltDrag::SettingsChanged() noexcept
 	RegisterHotKey(m_window, 1,
 		m_settings->GetSettings().activationHotkey.get_modifiers(),
 		m_settings->GetSettings().activationHotkey.get_code());
-}
-
-void AltDrag::MoveSizeStartInternal(HWND window, HMONITOR monitor, POINT const& ptScreen, require_write_lock writeLock) noexcept
-{
-	RECT windowRect{};
-	::GetWindowRect(window, &windowRect);
-}
-
-void AltDrag::MoveSizeUpdateInternal(HMONITOR monitor, POINT const& ptScreen, require_write_lock writeLock) noexcept
-{
-
-}
-
-void AltDrag::MoveSizeEndInternal(HWND window, POINT const& ptScreen, require_write_lock) noexcept
-{
-
 }
 
 LRESULT AltDrag::WndProc(HWND window, UINT message, WPARAM wparam, LPARAM lparam) noexcept
